@@ -1,0 +1,44 @@
+{
+    "scenarioName": "consume a JSON message",
+    "steps": [
+        {
+            "name": "produce_step",
+            "url": "kafka-topic:demo-json1",
+            "operation": "produce",
+            "request": {
+                "records": [
+                    {
+                        "key": "${RANDOM.NUMBER}",
+                        "value": "{\"name\": \"Nicola\"}"
+                    }
+                ]
+            },
+            "assertions": {
+                "status": "Ok"
+            }
+        },
+        {
+            "name": "consume_step",
+            "url": "kafka-topic:demo-json1",
+            "operation": "consume",
+            "request": {
+                "consumerLocalConfigs": {
+                    "recordType": "JSON",
+                    "commitSync": true,
+                    "showRecordsConsumed": true,
+                    "maxNoOfRetryPollsOrTimeouts": 3
+                }
+            },
+            "assertions": {
+                "size": 1,
+                "records": [
+                    {
+                        "value": {
+                            "name": "Nicola"
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
